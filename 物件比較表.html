@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>引越し先候補 物件比較表（専門家版 v3）</title>
+<style>
+  :root{--b:#007aff;--r:#ff3b30;--g:#34c759;--o:#ff9500;--gr:#86868b;--bg:#f5f5f7}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Noto Sans JP',sans-serif;background:var(--bg);color:#1d1d1f;padding:14px;font-size:13px}
+  h1{text-align:center;font-size:1.4em;margin-bottom:4px}
+  .sub{text-align:center;color:var(--gr);font-size:.78em;margin-bottom:16px}
+  .tabs{display:flex;justify-content:center;gap:5px;margin-bottom:14px;flex-wrap:wrap}
+  .tabs button{padding:6px 14px;border:1px solid #ddd;border-radius:18px;background:#fff;cursor:pointer;font-size:.78em;font-weight:500;transition:.15s}
+  .tabs button.on{background:var(--b);color:#fff;border-color:var(--b)}
+  .sec{display:none;max-width:1520px;margin:0 auto}.sec.on{display:block}
+  .tw{overflow-x:auto;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:18px}
+  table{width:100%;border-collapse:collapse;background:#fff;font-size:.75em;white-space:nowrap}
+  th{background:#f8f8fa;font-weight:600;position:sticky;top:0;z-index:2;border-bottom:2px solid #e5e5ea}
+  th,td{padding:6px 8px;text-align:center;border-bottom:1px solid #f0f0f5}
+  td:first-child,th:first-child{text-align:left;position:sticky;left:0;background:inherit;z-index:1;min-width:120px;font-weight:600}
+  th:first-child{z-index:3}
+  tr:hover{background:#f8f9ff}tr:hover td:first-child{background:#f8f9ff}
+  .hl{background:#fffde7!important}.hl td:first-child{background:#fffde7!important}
+  .t{display:inline-block;font-size:.68em;padding:1px 5px;border-radius:8px;margin:1px}
+  .tr{background:#fce4ec;color:#c62828}.tg{background:#e8f5e9;color:#2e7d32}.tb{background:#e3f2fd;color:#1565c0}.to{background:#fff3e0;color:#e65100}.tgr{background:#f5f5f5;color:#666}.tp{background:#f3e5f5;color:#7b1fa2}
+  .sn{font-weight:700;font-size:1em}
+  .cm{font-weight:700;font-size:1.02em}.cs{font-size:.82em;color:var(--gr)}
+  .notes{background:#fffde7;border-radius:10px;padding:14px;margin-top:14px;font-size:.8em}
+  .notes h3{font-size:.92em;margin-bottom:6px}.notes ul{padding-left:16px}.notes li{margin-bottom:3px}
+  /* Stats row */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:8px;margin-bottom:16px}
+  .stat{background:#fff;border-radius:10px;padding:12px;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+  .stat .l{font-size:.7em;color:var(--gr)}.stat .v{font-size:1.2em;font-weight:700}.stat .d{font-size:.68em;color:var(--gr);margin-top:1px}
+  /* Cards */
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:12px}
+  .card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.08);border-left:4px solid #ddd;transition:.15s}
+  .card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.12)}
+  .card.rs{border-left-color:var(--o)}.card.ra{border-left-color:var(--b)}.card.rb{border-left-color:var(--g)}
+  .cn{font-size:1.05em;font-weight:700}.cb{font-size:.68em;padding:2px 8px;border-radius:9px;font-weight:700;color:#fff;margin-left:6px}
+  .ca{font-size:.76em;color:var(--gr);margin:4px 0 8px}
+  .cp{font-size:1.3em;font-weight:700;color:var(--r)}.cpn{font-size:.72em;color:var(--gr);font-weight:400}
+  .cg{display:grid;grid-template-columns:1fr 1fr;gap:3px 12px;font-size:.8em;margin:8px 0}
+  .cg dt{color:var(--gr)}.cg dd{text-align:right;font-weight:500}
+  .cs2{border-top:1px solid #f0f0f5;padding-top:8px;margin-top:8px}
+  .cs2t{font-size:.7em;color:var(--gr);font-weight:600;margin-bottom:4px;letter-spacing:.3px}
+  .ms{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
+  .m{flex:1;min-width:60px}.ml{font-size:.65em;color:var(--gr)}.mb{height:4px;background:#f0f0f5;border-radius:2px;margin:1px 0}.mf{height:100%;border-radius:2px}.mv{font-size:.72em;font-weight:600}
+  .ct{display:flex;flex-wrap:wrap;gap:3px}
+  .cl{display:inline-block;margin-top:8px;padding:5px 13px;background:var(--b);color:#fff;text-decoration:none;border-radius:7px;font-size:.76em}
+  /* Ranking */
+  .rg{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+  .rb2{background:#fff;border-radius:10px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+  .rt{font-weight:700;font-size:.9em;margin-bottom:8px;padding-bottom:5px;border-bottom:2px solid var(--b)}
+  .rl{list-style:none}.rl li{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #f5f5f7;font-size:.82em}
+  .rl li:last-child{border:0}
+  .rp{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:.7em;margin-right:6px}
+  .p1{background:#ffd700;color:#333}.p2{background:#c0c0c0;color:#333}.p3{background:#cd7f32;color:#fff}.pn{background:#f0f0f5;color:#666}
+  /* Livability */
+  .liv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px}
+  .liv-card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .liv-card h3{font-size:.95em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .liv-score{display:inline-flex;align-items:center;gap:4px;font-size:.85em;font-weight:700;padding:2px 10px;border-radius:12px;color:#fff}
+  .liv-items{font-size:.8em;line-height:1.6}
+  .liv-items b{color:#333}
+  .stars{color:var(--o);letter-spacing:1px}
+  /* Checklist */
+  .chk{background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 2px rgba(0,0,0,.05);margin-bottom:12px}
+  .chk h3{font-size:.92em;margin-bottom:8px}
+  .chk h4{font-size:.85em;margin:10px 0 6px;color:var(--b)}
+  .chg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:4px}
+  .chi{display:flex;align-items:center;gap:5px;font-size:.8em;padding:3px 0}
+  .chi input{accent-color:var(--b)}
+  @media(max-width:768px){body{padding:8px}.cards{grid-template-columns:1fr}table{font-size:.68em}th,td{padding:4px 5px}}
+</style>
+</head>
+<body>
+
+<h1>引越し先候補 物件比較表</h1>
+<p class="sub">通勤先: 有楽町 / 永田町 / 東京 / 両国 / 羽田空港 | 2026年3月29日作成</p>
+
+<div class="stats">
+  <div class="stat"><div class="l">物件数</div><div class="v">15件</div><div class="d">湘南9 / 柏4 / 東京川崎2</div></div>
+  <div class="stat"><div class="l">月額レンジ</div><div class="v" style="color:var(--r)">11.9〜15.9万</div><div class="d">管理費込</div></div>
+  <div class="stat"><div class="l">面積レンジ</div><div class="v">50〜87㎡</div><div class="d">平均60.3㎡</div></div>
+  <div class="stat"><div class="l">東京駅</div><div class="v" style="color:var(--b)">25〜60分</div><div class="d">両国 30〜90分</div></div>
+  <div class="stat"><div class="l">総合1位</div><div class="v" style="color:var(--o)">蔵の杜</div><div class="d">87点 / 新築66㎡</div></div>
+</div>
+
+<div class="tabs">
+  <button class="on" onclick="sw('main',this)">総合比較</button>
+  <button onclick="sw('cost',this)">費用詳細</button>
+  <button onclick="sw('commute',this)">通勤アクセス</button>
+  <button onclick="sw('madori',this)">間取り評価</button>
+  <button onclick="sw('spec',this)">設備スペック</button>
+  <button onclick="sw('liv',this)">周辺環境・住み心地</button>
+  <button onclick="sw('rank',this)">ランキング</button>
+  <button onclick="sw('cards',this)">カード(TOP6)</button>
+  <button onclick="sw('chk',this)">内見チェック</button>
+</div>
+
+<!-- ===== 1. 総合比較 ===== -->
+<div class="sec on" id="s-main">
+<div class="tw"><table>
+<thead><tr>
+  <th>物件名</th><th>総合</th><th>エリア</th><th>最寄駅</th>
+  <th>月額計</th><th>㎡単価</th><th>初期費用</th>
+  <th>間取り</th><th>面積</th><th>間取り<br>評価</th>
+  <th>築年</th><th>構造/<br>防音</th>
+  <th>東京駅</th><th>両国</th>
+  <th>周辺<br>環境</th><th>ラン<br>散歩</th>
+  <th>グルメ</th><th>治安</th><th>ペット</th><th>契約</th><th>特記事項</th>
+</tr></thead>
+<tbody>
+
+<tr class="hl">
+  <td>蔵の杜</td><td><span class="sn" style="color:var(--o)">87</span></td><td>柏市</td><td>柏の葉C<br>徒歩15分</td>
+  <td><span class="cm">13.85万</span></td><td>2,076円</td><td>約17.5万</td>
+  <td>2LDK</td><td>66.73㎡</td><td><span class="sn">82</span></td>
+  <td><span class="t tg">新築</span></td><td>鉄骨/B+</td>
+  <td>約50分</td><td>約55分</td>
+  <td><span class="sn">80</span></td><td><span class="sn" style="color:var(--g)">85</span></td>
+  <td><span class="t tb">★3</span></td><td><span class="t tg">★5</span></td><td>-</td><td>普通</td><td>ネット無料, 礼金0, 駐車場7,920円</td>
+</tr>
+
+<tr class="hl">
+  <td>テラスロンドI</td><td><span class="sn" style="color:var(--o)">86</span></td><td>杉並区</td><td>荻窪<br>徒歩14分</td>
+  <td><span class="cm">15.5万</span></td><td>2,876円</td><td>約18.5万</td>
+  <td>2LDK</td><td>53.9㎡</td><td><span class="sn">66</span></td>
+  <td>9年</td><td>軽量鉄骨/B</td>
+  <td><span class="t tg">約25分</span></td><td><span class="t tg">約30分</span></td>
+  <td><span class="sn" style="color:var(--g)">92</span></td><td><span class="sn">80</span></td>
+  <td><span class="t tg">★5</span></td><td><span class="t tb">★4</span></td><td>-</td><td>普通</td><td>丸ノ内線直通! 1階住戸</td>
+</tr>
+
+<tr class="hl">
+  <td>アミスタ湘南</td><td><span class="sn" style="color:var(--b)">83</span></td><td>藤沢市</td><td>本鵠沼<br>徒歩8分</td>
+  <td><span class="cm">12.5万</span></td><td>2,500円</td><td>約16万</td>
+  <td>2LDK<br><span class="cs">洋6+洋4+LDK11.9</span></td><td>50㎡</td><td><span class="sn">65</span></td>
+  <td><span class="t tg">4年</span></td><td><span class="t tb">RC/A</span></td>
+  <td>約55分</td><td>約80分</td>
+  <td><span class="sn">78</span></td><td><span class="sn" style="color:var(--g)">88</span></td>
+  <td><span class="t to">★4</span></td><td><span class="t tb">★4</span></td><td>-</td><td>普通</td><td>RC最上階, 礼金0, 駅近8分</td>
+</tr>
+
+<tr>
+  <td>大船 2LDK</td><td><span class="sn" style="color:var(--b)">82</span></td><td>横浜市</td><td>大船<br>徒歩18分</td>
+  <td><span class="cm">11.9万</span></td><td>2,000円</td><td>約14.5万</td>
+  <td>2LDK</td><td>59.5㎡</td><td><span class="sn">75</span></td>
+  <td>10年</td><td>軽量鉄骨/B</td>
+  <td>約45分</td><td>約65分</td>
+  <td><span class="sn" style="color:var(--g)">90</span></td><td><span class="sn">60</span></td>
+  <td><span class="t tb">★3</span></td><td><span class="t to">★3</span></td><td><span class="t to">○</span></td><td>普通</td><td><span class="t tg">月額最安</span> ネット無料</td>
+</tr>
+
+<tr>
+  <td>シティレジデンス<br>KAMIKO</td><td><span class="sn" style="color:var(--b)">81</span></td><td>川崎市</td><td>武蔵新城<br>徒歩13分</td>
+  <td><span class="cm">14.9万</span></td><td>2,245円</td><td>約32万</td>
+  <td>2LDK<br><span class="cs">洋6.7x2+LDK15.3</span></td><td>66.38㎡</td><td><span class="sn" style="color:var(--o)">88</span></td>
+  <td>34年<br><span class="t tg">リノベ</span></td><td><span class="t tb">RC/A</span></td>
+  <td>約40分</td><td>約55分</td>
+  <td><span class="sn" style="color:var(--g)">88</span></td><td><span class="sn">75</span></td>
+  <td><span class="t to">★4</span></td><td><span class="t tb">★4</span></td><td>-</td><td>普通</td><td><span class="t tg">LDK15.3畳!</span> 敷引1ヶ月</td>
+</tr>
+
+<tr>
+  <td>辻堂 2LDK</td><td><span class="sn">80</span></td><td>藤沢市</td><td>辻堂<br>徒歩10分</td>
+  <td><span class="cm">14万</span></td><td>2,459円</td><td>約30万</td>
+  <td>2LDK<br><span class="cs">洋6+洋6+LDK9</span></td><td>56.92㎡</td><td><span class="sn">65</span></td>
+  <td>6年</td><td>木造/C+</td>
+  <td>約50分</td><td>約78分</td>
+  <td><span class="sn" style="color:var(--o)">95</span></td><td><span class="sn" style="color:var(--o)">92</span></td>
+  <td><span class="t to">★4</span></td><td><span class="t tg">★5</span></td><td>-</td><td>普通</td><td>テラスモール至近! 即入居可</td>
+</tr>
+
+<tr>
+  <td>フォーリア A</td><td><span class="sn">79</span></td><td>柏市</td><td>柏の葉C<br>徒歩14分</td>
+  <td><span class="cm">13.65万</span></td><td>2,339円</td><td>約29.5万</td>
+  <td>2LDK<br><span class="cs">洋7.1+洋5.7+LDK12.4</span></td><td>58.37㎡</td><td><span class="sn">78</span></td>
+  <td><span class="t tg">3年</span></td><td>軽量鉄骨/B</td>
+  <td>約50分</td><td>約55分</td>
+  <td><span class="sn">80</span></td><td><span class="sn" style="color:var(--g)">85</span></td>
+  <td><span class="t tb">★3</span></td><td><span class="t tg">★5</span></td><td>-</td><td>普通</td><td>最上階, WIC, ネット無料</td>
+</tr>
+
+<tr>
+  <td>浜竹貸家</td><td><span class="sn">78</span></td><td>茅ヶ崎市</td><td>辻堂<br>徒歩15分</td>
+  <td><span class="cm">12.5万</span></td><td><span class="t tg">1,431円</span></td><td>約25万</td>
+  <td><span class="t tg">3LDK</span></td><td><span class="t tg">87.36㎡</span></td><td><span class="sn" style="color:var(--o)">92</span></td>
+  <td>18年</td><td>木造/C</td>
+  <td>約55分</td><td>約78分</td>
+  <td><span class="sn">82</span></td><td><span class="sn" style="color:var(--o)">90</span></td>
+  <td><span class="t to">★4</span></td><td><span class="t tg">★5</span></td><td><span class="t to">○</span></td><td><span class="t tr">定借5年</span></td><td>一戸建て, 駐車場無料, 入居5月</td>
+</tr>
+
+<tr>
+  <td>KAPAL ENOSHIMA</td><td><span class="sn">77</span></td><td>藤沢市</td><td>柳小路<br>徒歩11分</td>
+  <td><span class="cm">12.8万</span></td><td>2,324円</td><td><span class="t tr">約54万</span></td>
+  <td>2LDK<br><span class="cs">洋6+洋4.5+LDK12.5</span></td><td>55.09㎡</td><td><span class="sn">72</span></td>
+  <td>5年</td><td>軽量鉄骨/B</td>
+  <td>約60分</td><td>約90分</td>
+  <td><span class="sn">65</span></td><td><span class="sn" style="color:var(--o)">95</span></td>
+  <td><span class="t to">★4</span></td><td><span class="t tb">★4</span></td><td><span class="t to">○</span></td><td>普通</td><td>江ノ島至近! 初期費用高め</td>
+</tr>
+
+<tr>
+  <td>アダージオ湘南</td><td><span class="sn">77</span></td><td>藤沢市</td><td>辻堂<br>徒歩14分</td>
+  <td><span class="cm">14.5万</span></td><td>2,267円</td><td>約30万</td>
+  <td>2LDK</td><td>63.97㎡</td><td><span class="sn">80</span></td>
+  <td><span class="t tg">4年</span></td><td>木造/C+</td>
+  <td>約50分</td><td>約78分</td>
+  <td><span class="sn" style="color:var(--o)">92</span></td><td><span class="sn" style="color:var(--o)">90</span></td>
+  <td><span class="t to">★4</span></td><td><span class="t tg">★5</span></td><td>-</td><td><span class="t tr">定借5年</span></td><td>最上階, IH, 入居6月</td>
+</tr>
+
+<tr>
+  <td>フォーリアB</td><td><span class="sn">76</span></td><td>柏市</td><td>柏の葉C<br>徒歩14分</td>
+  <td><span class="cm">14.25万</span></td><td>2,369円</td><td>約30万</td>
+  <td>2LDK</td><td>60.16㎡</td><td><span class="sn">76</span></td>
+  <td><span class="t tg">3年</span></td><td>鉄骨/B+</td>
+  <td>約50分</td><td>約55分</td>
+  <td><span class="sn">80</span></td><td><span class="sn" style="color:var(--g)">85</span></td>
+  <td><span class="t tb">★3</span></td><td><span class="t tg">★5</span></td><td>-</td><td>普通</td><td>最上階, WIC, エアコン2台</td>
+</tr>
+
+<tr>
+  <td>ル リアン湘南</td><td><span class="sn">76</span></td><td>茅ヶ崎市</td><td>辻堂<br>バス5+1分</td>
+  <td><span class="cm">12.05万</span></td><td>2,243円</td><td>約14万</td>
+  <td>2LDK</td><td>53.72㎡</td><td><span class="sn">68</span></td>
+  <td>13年</td><td><span class="t tb">RC/A</span></td>
+  <td>約55分</td><td>約78分</td>
+  <td><span class="sn">82</span></td><td><span class="sn" style="color:var(--g)">88</span></td>
+  <td><span class="t to">★4</span></td><td><span class="t tg">★5</span></td><td>-</td><td>普通</td><td><span class="t tp">花火&江ノ島ビュー!</span> RC最上階4F</td>
+</tr>
+
+<tr>
+  <td>シャトーエミール</td><td><span class="sn">74</span></td><td>藤沢市</td><td>藤沢<br>徒歩19分</td>
+  <td><span class="cm">14.7万</span></td><td>2,476円</td><td>約44万</td>
+  <td>2SLDK<br><span class="cs">+サービスルーム</span></td><td>59.37㎡</td><td><span class="sn">80</span></td>
+  <td>12年</td><td><span class="t tb">RC/A</span></td>
+  <td>約55分</td><td>約70分</td>
+  <td><span class="sn">76</span></td><td><span class="sn">78</span></td>
+  <td><span class="t tb">★3½</span></td><td><span class="t to">★3</span></td><td>-</td><td>普通</td><td>5階建RC, 宅配BOX, 礼金2ヶ月</td>
+</tr>
+
+<tr>
+  <td>ヴィラシャンベール</td><td><span class="sn">72</span></td><td>藤沢市</td><td>本鵠沼<br>徒歩11分</td>
+  <td><span class="cm">14.83万</span><br><span class="cs">+駐車場1.1万必須</span></td><td>2,514円</td><td>約43万</td>
+  <td>2LDK<br><span class="cs">洋6.3+洋6.1+LDK12.5</span></td><td>59㎡</td><td><span class="sn">78</span></td>
+  <td>14年</td><td>ALC/B+</td>
+  <td>約55分</td><td>約80分</td>
+  <td><span class="sn">78</span></td><td><span class="sn" style="color:var(--g)">88</span></td>
+  <td><span class="t to">★4</span></td><td><span class="t tb">★4</span></td><td>-</td><td>普通</td><td><span class="t tr">駐車場必須+1.1万</span></td>
+</tr>
+
+<tr>
+  <td>シャーメゾン<br>ボヌール</td><td><span class="sn">71</span></td><td>柏市</td><td>柏の葉C<br>徒歩15分</td>
+  <td><span class="cm">15.9万</span></td><td>2,538円</td><td>約33万</td>
+  <td>2LDK</td><td>62.64㎡</td><td><span class="sn">78</span></td>
+  <td><span class="t tg">新築</span></td><td>鉄骨/B+</td>
+  <td>約50分</td><td>約55分</td>
+  <td><span class="sn">80</span></td><td><span class="sn" style="color:var(--g)">85</span></td>
+  <td><span class="t tb">★3</span></td><td><span class="t tg">★5</span></td><td><span class="t to">○</span></td><td>普通</td><td>新築, ペット可, 月額最高</td>
+</tr>
+
+</tbody></table></div>
+
+<div class="notes">
+<h3>総合スコア算出基準（100点満点・改訂版）</h3>
+<ul>
+  <li><b>コスパ（20点）</b>: ㎡単価、月額、初期費用の安さ</li>
+  <li><b>通勤（20点）</b>: 東京/有楽町/永田町/両国/羽田への時間・乗換数</li>
+  <li><b>間取り・スペック（15点）</b>: LDKの広さ、各部屋サイズ、面積に対する効率性</li>
+  <li><b>物件品質（15点）</b>: 築年数、構造（防音性）、設備充実度</li>
+  <li><b>周辺環境（15点）</b>: スーパー/飲食店/ドラッグストアの充実度</li>
+  <li><b>ランニング・散歩（15点）</b>: 海・公園・緑道へのアクセス、コースの魅力</li>
+</ul>
+</div>
+</div>
+
+<!-- ===== 2. 費用詳細 ===== -->
+<div class="sec" id="s-cost">
+<div class="tw"><table>
+<thead><tr>
+  <th>物件名</th><th>家賃</th><th>管理費</th><th>月額計</th><th>㎡単価</th>
+  <th>敷金</th><th>礼金</th><th>仲介料</th><th>初期費用</th>
+  <th>年間コスト</th><th>2年間<br>総コスト</th>
+  <th>ネット</th><th>駐車場</th><th>その他固定費</th>
+</tr></thead>
+<tbody>
+<tr><td>大船 2LDK</td><td>11.3万</td><td>6,000</td><td><b>11.9万</b></td><td>2,000</td><td>0</td><td>11.3万</td><td>11.3万</td><td><b>約25.6万</b></td><td>142.8万</td><td><span class="t tg">約311万</span></td><td><span class="t tg">無料</span></td><td>近隣1.6万</td><td>保証料3.3万</td></tr>
+<tr><td>ル リアン湘南</td><td>11.4万</td><td>6,500</td><td><b>12.05万</b></td><td>2,243</td><td>0</td><td>11.4万</td><td>11.4万</td><td><b>約25.5万</b></td><td>144.6万</td><td>約315万</td><td><span class="t tg">無料</span></td><td>-</td><td>安心S月3,300円</td></tr>
+<tr><td>アミスタ湘南</td><td>12.3万</td><td>2,000</td><td><b>12.5万</b></td><td>2,500</td><td>12.3万</td><td>0</td><td>12.3万</td><td><b>約28万</b></td><td>150万</td><td>約328万</td><td>-</td><td>-</td><td>初期3.52万</td></tr>
+<tr><td>浜竹貸家</td><td>12.5万</td><td>0</td><td><b>12.5万</b></td><td><span class="t tg">1,431</span></td><td>12.5万</td><td>12.5万</td><td>12.5万</td><td><b>約37.5万</b></td><td>150万</td><td>約338万</td><td>-</td><td><span class="t tg">無料</span></td><td>-</td></tr>
+<tr><td>KAPAL ENOSHIMA</td><td>12.5万</td><td>3,000</td><td><b>12.8万</b></td><td>2,324</td><td>25万</td><td>12.5万</td><td>13.75万</td><td><span class="t tr"><b>約54万</b></span></td><td>153.6万</td><td>約361万</td><td>-</td><td>1.1万</td><td>その他2.75万</td></tr>
+<tr><td>フォーリア A</td><td>13万</td><td>6,500</td><td><b>13.65万</b></td><td>2,339</td><td>0</td><td>26万</td><td>13万</td><td><b>約39万</b></td><td>163.8万</td><td>約367万</td><td><span class="t tg">無料</span></td><td>-</td><td>-</td></tr>
+<tr><td>蔵の杜</td><td>13.45万</td><td>4,000</td><td><b>13.85万</b></td><td>2,076</td><td>13.45万</td><td>0</td><td>13.45万</td><td><b>約30万</b></td><td>166.2万</td><td>約363万</td><td><span class="t tg">無料</span></td><td>7,920円</td><td>-</td></tr>
+<tr><td>辻堂 2LDK</td><td>13.5万</td><td>5,000</td><td><b>14万</b></td><td>2,459</td><td>13.5万</td><td>13.5万</td><td>13.5万</td><td><b>約40.5万</b></td><td>168万</td><td>約377万</td><td>-</td><td>1.1万</td><td>-</td></tr>
+<tr><td>フォーリアB</td><td>13.6万</td><td>6,500</td><td><b>14.25万</b></td><td>2,369</td><td>0</td><td>27.2万</td><td>13.6万</td><td><b>約41万</b></td><td>171万</td><td>約383万</td><td><span class="t tg">無料</span></td><td>-</td><td>-</td></tr>
+<tr><td>シャトーエミール</td><td>13.8万</td><td>9,000</td><td><b>14.7万</b></td><td>2,476</td><td>13.8万</td><td>27.6万</td><td>13.8万</td><td><b>約55万</b></td><td>176.4万</td><td>約408万</td><td>-</td><td>-</td><td>-</td></tr>
+<tr><td>アダージオ湘南</td><td>14.2万</td><td>3,000</td><td><b>14.5万</b></td><td>2,267</td><td>14.2万</td><td>14.2万</td><td>14.2万</td><td><b>約43万</b></td><td>174万</td><td>約391万</td><td>-</td><td>-</td><td>IHコンロ</td></tr>
+<tr><td>ヴィラシャンベール</td><td>14万</td><td>8,300</td><td><b>14.83万</b></td><td>2,514</td><td>14万</td><td>21万</td><td>14万</td><td><b>約53万</b></td><td>178万</td><td><span class="t tr">約409万</span></td><td>-</td><td><span class="t tr">1.1万必須</span></td><td>実質月15.93万</td></tr>
+<tr><td>シティレジデンスKAMIKO</td><td>14.3万</td><td>6,000</td><td><b>14.9万</b></td><td>2,245</td><td>14.3万</td><td>14.3万</td><td>14.3万</td><td><b>約43万</b></td><td>178.8万</td><td>約401万</td><td>-</td><td>-</td><td>敷引1ヶ月</td></tr>
+<tr><td>シャーメゾンボヌール</td><td>14.9万</td><td>1万</td><td><b>15.9万</b></td><td>2,538</td><td>0</td><td>29.8万</td><td>14.9万</td><td><b>約45万</b></td><td>190.8万</td><td>約426万</td><td>-</td><td>-</td><td>太陽光</td></tr>
+<tr><td>テラスロンドI</td><td>15.2万</td><td>3,000</td><td><b>15.5万</b></td><td>2,876</td><td>0</td><td>15.2万</td><td>15.2万</td><td><b>約30万</b></td><td>186万</td><td>約402万</td><td>-</td><td>-</td><td>-</td></tr>
+</tbody></table></div>
+</div>
+
+<!-- ===== 3. 通勤アクセス ===== -->
+<div class="sec" id="s-commute">
+<h2 style="font-size:1em;margin-bottom:10px">通勤アクセス詳細（両国駅を追加）</h2>
+<div class="tw"><table>
+<thead><tr>
+  <th>物件名</th><th>最寄駅</th><th>駅まで</th><th>路線</th>
+  <th>→東京</th><th>→有楽町</th><th>→永田町</th><th>→両国</th><th>→羽田</th>
+  <th>乗換<br>(東京)</th><th>乗換<br>(両国)</th><th>通勤<br>総合</th>
+</tr></thead>
+<tbody>
+<tr class="hl"><td>テラスロンドI</td><td>荻窪</td><td>徒歩14分</td><td>丸ノ内線/JR中央線</td>
+  <td><b>約25分</b></td><td>約30分</td><td>約25分</td><td><span class="t tg">約30分</span></td><td>約55分</td><td>0回</td><td>0-1回</td><td><span class="sn" style="color:var(--o)">96</span></td></tr>
+<tr class="hl"><td>シティレジデンスKAMIKO</td><td>武蔵新城</td><td>徒歩13分</td><td>JR南武線</td>
+  <td><b>約40分</b></td><td>約42分</td><td>約45分</td><td>約55分</td><td>約50分</td><td>1回</td><td>2回</td><td><span class="sn" style="color:var(--b)">78</span></td></tr>
+<tr><td>大船 2LDK</td><td>大船</td><td>徒歩18分</td><td>JR東海道/横須賀</td>
+  <td><b>約45分</b></td><td>約47分</td><td>約55分</td><td>約65分</td><td>約60分</td><td>0回</td><td>1回</td><td><span class="sn">70</span></td></tr>
+<tr><td>フォーリア A</td><td>柏の葉C</td><td>徒歩14分</td><td>TX→秋葉原</td>
+  <td><b>約50分</b></td><td>約52分</td><td>約55分</td><td><span class="t tg">約55分</span></td><td>約80分</td><td>1回</td><td>1回</td><td><span class="sn">62</span></td></tr>
+<tr><td>蔵の杜</td><td>柏の葉C</td><td>徒歩15分</td><td>TX→秋葉原</td>
+  <td><b>約50分</b></td><td>約52分</td><td>約55分</td><td><span class="t tg">約55分</span></td><td>約80分</td><td>1回</td><td>1回</td><td><span class="sn">61</span></td></tr>
+<tr><td>フォーリアB</td><td>柏の葉C</td><td>徒歩14分</td><td>TX→秋葉原</td>
+  <td><b>約50分</b></td><td>約52分</td><td>約55分</td><td>約55分</td><td>約80分</td><td>1回</td><td>1回</td><td><span class="sn">62</span></td></tr>
+<tr><td>シャーメゾンボヌール</td><td>柏の葉C</td><td>徒歩15分</td><td>TX→秋葉原</td>
+  <td><b>約50分</b></td><td>約52分</td><td>約55分</td><td>約55分</td><td>約80分</td><td>1回</td><td>1回</td><td><span class="sn">60</span></td></tr>
+<tr><td>辻堂 2LDK</td><td>辻堂</td><td>徒歩10分</td><td>JR東海道線</td>
+  <td><b>約50分</b></td><td>約52分</td><td>約60分</td><td>約78分</td><td>約65分</td><td>0回</td><td>2回</td><td><span class="sn">62</span></td></tr>
+<tr><td>アダージオ湘南</td><td>辻堂</td><td>徒歩14分</td><td>JR東海道線</td>
+  <td><b>約50分</b></td><td>約52分</td><td>約60分</td><td>約78分</td><td>約65分</td><td>0回</td><td>2回</td><td><span class="sn">58</span></td></tr>
+<tr><td>アミスタ湘南</td><td>本鵠沼</td><td>徒歩8分</td><td>小田急→藤沢</td>
+  <td><b>約55分</b></td><td>約57分</td><td>約65分</td><td>約80分</td><td>約65分</td><td>1回</td><td>3回</td><td><span class="sn">55</span></td></tr>
+<tr><td>ヴィラシャンベール</td><td>本鵠沼</td><td>徒歩11分</td><td>小田急→藤沢</td>
+  <td><b>約55分</b></td><td>約57分</td><td>約65分</td><td>約80分</td><td>約65分</td><td>1回</td><td>3回</td><td><span class="sn">52</span></td></tr>
+<tr><td>ル リアン湘南</td><td>辻堂(バス)</td><td>バス5+1分</td><td>JR東海道線</td>
+  <td><b>約55分</b></td><td>約57分</td><td>約65分</td><td>約78分</td><td>約70分</td><td>0回</td><td>2回</td><td><span class="sn">48</span></td></tr>
+<tr><td>シャトーエミール</td><td>藤沢</td><td>徒歩19分</td><td>JR東海道線</td>
+  <td><b>約55分</b></td><td>約57分</td><td>約60分</td><td>約70分</td><td>約65分</td><td>0回</td><td>2回</td><td><span class="sn">55</span></td></tr>
+<tr><td>浜竹貸家</td><td>辻堂</td><td>徒歩15分</td><td>JR東海道線</td>
+  <td><b>約55分</b></td><td>約57分</td><td>約65分</td><td>約78分</td><td>約70分</td><td>0回</td><td>2回</td><td><span class="sn">50</span></td></tr>
+<tr><td>KAPAL ENOSHIMA</td><td>柳小路</td><td>徒歩11分</td><td>江ノ電→藤沢</td>
+  <td><b>約60分</b></td><td>約62分</td><td>約70分</td><td>約90分</td><td>約75分</td><td>1回</td><td>3回</td><td><span class="sn">42</span></td></tr>
+</tbody></table></div>
+<div class="notes">
+<h3>両国駅への通勤ポイント</h3>
+<ul>
+  <li><b>荻窪が圧倒的</b>: JR総武線各停で乗換なし約40分、中央線快速→御茶ノ水乗換で約30分</li>
+  <li><b>柏の葉キャンパス</b>: TX→秋葉原→JR総武線で約55分。意外と近い（乗換1回）</li>
+  <li><b>湘南エリア</b>: 東海道線→東京/秋葉原乗換→総武線で70〜90分。両国頻度が高いとやや辛い</li>
+  <li><b>武蔵新城</b>: 南武線→横須賀線→総武線で約55分（乗換2回）</li>
+</ul>
+</div>
+</div>
+
+<!-- ===== 4. 間取り評価 ===== -->
+<div class="sec" id="s-madori">
+<h2 style="font-size:1em;margin-bottom:10px">間取り総合評価</h2>
+<p style="font-size:.8em;color:var(--gr);margin-bottom:10px">面積だけでなく、LDKの広さ・各部屋のサイズ・部屋数・レイアウト効率を総合評価</p>
+<div class="tw"><table>
+<thead><tr>
+  <th>物件名</th><th>間取り</th><th>面積</th>
+  <th>LDK</th><th>洋室1</th><th>洋室2</th><th>その他</th>
+  <th>間取り<br>総合点</th><th>LDK<br>評価</th><th>居室<br>バランス</th><th>面積<br>効率</th><th>コメント</th>
+</tr></thead>
+<tbody>
+<tr class="hl"><td>浜竹貸家</td><td><span class="t tg">3LDK</span></td><td><b>87.36㎡</b></td>
+  <td><span class="t tg"><b>14畳</b></span></td><td>和7.9畳</td><td>洋6.9畳</td><td>洋6.3畳</td>
+  <td><span class="sn" style="color:var(--o)">95</span></td><td><span class="t tg">S</span></td><td>A</td><td>A</td><td>3LDK+LDK14畳! 全室6畳超で文句なし。和室もゆとりの7.9畳</td></tr>
+<tr class="hl"><td>シティレジデンスKAMIKO</td><td>2LDK</td><td>66.38㎡</td>
+  <td><span class="t tg"><b>15.3畳</b></span></td><td>6.7畳</td><td>6.7畳</td><td>-</td>
+  <td><span class="sn" style="color:var(--o)">88</span></td><td><span class="t tg">S</span></td><td>A</td><td>A</td><td>LDK15.3畳は全物件中No.1! 両居室6畳超でバランス◎</td></tr>
+<tr class="hl"><td>蔵の杜</td><td>2LDK</td><td>66.73㎡</td>
+  <td><b>12.5畳</b></td><td><span class="t tg">7.2畳</span></td><td>6.1畳</td><td>納戸2.4畳</td>
+  <td><span class="sn" style="color:var(--b)">85</span></td><td>B+</td><td>A</td><td>A</td><td>洋7.2畳+6.1畳で両室使いやすい。納戸2.4畳で収納◎。新築</td></tr>
+<tr><td>シャーメゾンボヌール</td><td>2LDK</td><td>62.64㎡</td>
+  <td><span class="t tg"><b>13.5畳</b></span></td><td>6.6畳</td><td>5.5畳</td><td>-</td>
+  <td><span class="sn">82</span></td><td>A</td><td>B+</td><td>A</td><td>LDK13.5畳は2LDK中3位! 新築で居室バランスも良好</td></tr>
+<tr><td>シャトーエミール</td><td>2SLDK</td><td>59.37㎡</td>
+  <td><b>11.5畳</b></td><td>5.9畳</td><td>5.7畳</td><td><span class="t tp">納戸3.1畳</span></td>
+  <td><span class="sn">78</span></td><td>B</td><td>B</td><td>A</td><td>居室はやや小さめだが納戸3.1畳で実質3部屋使い。書斎に◎</td></tr>
+<tr><td>フォーリアB</td><td>2LDK</td><td>60.16㎡</td>
+  <td><b>12.6畳</b></td><td><span class="t tg">7.6畳</span></td><td>5.1畳</td><td>WIC</td>
+  <td><span class="sn">78</span></td><td>B+</td><td>B+</td><td>B+</td><td>洋7.6畳は全物件の居室中No.1! LDK12.6+WICで使い勝手◎</td></tr>
+<tr><td>フォーリア A</td><td>2LDK</td><td>58.37㎡</td>
+  <td><b>12.4畳</b></td><td><span class="t tg">7.1畳</span></td><td>5.7畳</td><td>WIC</td>
+  <td><span class="sn">78</span></td><td>B+</td><td>A</td><td>B+</td><td>洋7.1畳は居室として十分! LDK12.4も合格ライン</td></tr>
+<tr><td>ヴィラシャンベール</td><td>2LDK</td><td>59㎡</td>
+  <td><b>12.5畳</b></td><td>6.3畳</td><td>6.1畳</td><td>-</td>
+  <td><span class="sn">78</span></td><td>B+</td><td><span class="t tg">A</span></td><td>B+</td><td>両居室6畳超で均等。夫婦の寝室+書斎に◎</td></tr>
+<tr><td>アダージオ湘南</td><td>2LDK</td><td>63.97㎡</td>
+  <td><span class="t to">画像のみ</span></td><td><span class="t to">画像のみ</span></td><td><span class="t to">画像のみ</span></td><td>-</td>
+  <td><span class="sn">78</span></td><td>A推定</td><td>B+推定</td><td>A</td><td>64㎡で2LDK。畳数は間取り図画像のみで未確認。内見時要チェック</td></tr>
+<tr><td>ル リアン湘南</td><td>2LDK</td><td>53.72㎡</td>
+  <td><span class="t tg"><b>13.9畳</b></span></td><td>5.8畳</td><td>5.3畳</td><td>-</td>
+  <td><span class="sn">75</span></td><td><span class="t tg">A</span></td><td>C+</td><td><span class="t tg">S</span></td><td>54㎡でLDK13.9畳は驚異の面積効率! 居室は小さめだがLDKが広い<br><span class="t tp">4F花火&江ノ島ビュー!</span></td></tr>
+<tr><td>大船 2LDK</td><td>2LDK</td><td>59.5㎡</td>
+  <td><span class="t to">未掲載</span></td><td><span class="t to">未掲載</span></td><td><span class="t to">未掲載</span></td><td>WIC</td>
+  <td><span class="sn">73</span></td><td>B+推定</td><td>B推定</td><td>B+</td><td>SUUMO上に畳数データなし。WIC付き60㎡弱。内見時要チェック</td></tr>
+<tr><td>KAPAL ENOSHIMA</td><td>2LDK</td><td>55.09㎡</td>
+  <td><b>12.5畳</b></td><td>6畳</td><td>4.5畳</td><td>-</td>
+  <td><span class="sn">72</span></td><td>B+</td><td><span class="t tr">C+</span></td><td>B</td><td>LDK12.5は◎だが洋4.5畳はやや狭い。収納次第</td></tr>
+<tr><td>テラスロンドI</td><td>2LDK</td><td>53.9㎡</td>
+  <td><b>10.1畳</b></td><td>5.5畳</td><td>5.1畳</td><td>WIC</td>
+  <td><span class="sn">64</span></td><td>C+</td><td>C+</td><td>B</td><td>LDK10.1畳・居室も5畳台でコンパクト。WICで収納カバー。通勤特化型</td></tr>
+<tr><td>アミスタ湘南</td><td>2LDK</td><td>50㎡</td>
+  <td>11.9畳</td><td>6畳</td><td><span class="t tr">4畳</span></td><td>-</td>
+  <td><span class="sn">65</span></td><td>B</td><td><span class="t tr">C</span></td><td>B</td><td>50㎡は全物件中最小。洋4畳は書斎程度。LDK11.9は健闘</td></tr>
+<tr><td>辻堂 2LDK</td><td>2LDK</td><td>56.92㎡</td>
+  <td><span class="t tr"><b>9畳</b></span></td><td>6畳</td><td>6畳</td><td>-</td>
+  <td><span class="sn">65</span></td><td><span class="t tr">C+</span></td><td>B+</td><td>B</td><td>居室は両方6畳で◎だがLDK9畳はかなり狭い。ダイニングテーブル必須なら要注意</td></tr>
+</tbody></table></div>
+<div class="notes">
+<h3>間取り評価のポイント</h3>
+<ul>
+  <li><b>LDK 12畳以上</b>: ダイニングテーブル+ソファを置いてもゆとりがある最低ライン</li>
+  <li><b>LDK 15畳以上</b>: ゆったり暮らせる理想的なサイズ（シティレジデンスKAMIKOのみ）</li>
+  <li><b>LDK 9畳</b>: ダイニングテーブルかソファ、どちらかの選択を迫られる</li>
+  <li><b>洋4〜4.5畳</b>: シングルベッドを置くとほぼいっぱい。書斎・子供部屋向き</li>
+  <li><b>洋6畳以上</b>: ダブルベッド+デスクが置ける快適なサイズ</li>
+  <li><b>面積効率</b>: 同じ面積でもLDK・居室が広い物件は、廊下や水回りが効率的な設計</li>
+</ul>
+</div>
+</div>
+
+<!-- ===== 5. 設備スペック ===== -->
+<div class="sec" id="s-spec">
+<div class="tw"><table>
+<thead><tr>
+  <th>物件名</th><th>構造</th><th>防音</th><th>耐震</th><th>階数</th>
+  <th>オート<br>ロック</th><th>宅配<br>BOX</th><th>浴室<br>乾燥</th><th>追焚</th><th>SK</th><th>WIC</th><th>ネット<br>無料</th><th>ペット</th><th>駐車場</th><th>EV</th><th>眺望</th><th>設備点</th>
+</tr></thead>
+<tbody>
+<tr><td>大船 2LDK</td><td>軽量鉄骨</td><td>B</td><td>新</td><td>2/2F</td><td>-</td><td>-</td><td>○</td><td>-</td><td>○</td><td>○</td><td>○</td><td><span class="t to">○</span></td><td>近隣1.6万</td><td>-</td><td>-</td><td>70</td></tr>
+<tr><td>ル リアン湘南</td><td>RC</td><td><span class="t tb">A</span></td><td>新</td><td>4/4F</td><td>○</td><td>-</td><td>-</td><td>○</td><td>○</td><td>-</td><td>○</td><td>-</td><td>-</td><td>○</td><td><span class="t tp">花火&江ノ島</span></td><td>76</td></tr>
+<tr><td>アミスタ湘南</td><td>RC</td><td><span class="t tb">A</span></td><td>新</td><td>3/3F</td><td>○</td><td>-</td><td>○</td><td>-</td><td>○</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>75</td></tr>
+<tr><td>浜竹貸家</td><td>木造</td><td>C</td><td>新</td><td>一戸建</td><td>-</td><td>-</td><td>-</td><td>○</td><td>○</td><td>-</td><td>-</td><td><span class="t to">○</span></td><td><span class="t tg">無料</span></td><td>-</td><td>南向き</td><td>60</td></tr>
+<tr><td>KAPAL ENOSHIMA</td><td>軽量鉄骨</td><td>B</td><td>新</td><td>3/3F</td><td>○</td><td>○</td><td>○</td><td>-</td><td>○</td><td>-</td><td>-</td><td><span class="t to">○</span></td><td>1.1万</td><td>-</td><td>-</td><td>78</td></tr>
+<tr><td>フォーリア A</td><td>軽量鉄骨</td><td>B</td><td>新</td><td>3/3F</td><td>○</td><td>-</td><td>○</td><td>-</td><td>○</td><td>○</td><td>○</td><td>-</td><td>-</td><td>-</td><td>-</td><td>82</td></tr>
+<tr><td>蔵の杜</td><td>鉄骨</td><td>B+</td><td>新</td><td>2/2F</td><td>-</td><td>○</td><td>○</td><td>-</td><td>○</td><td>-</td><td>○</td><td>-</td><td>7,920円</td><td>-</td><td>-</td><td>78</td></tr>
+<tr><td>辻堂 2LDK</td><td>木造</td><td>C+</td><td>新</td><td>1-2/2F</td><td>-</td><td>-</td><td>○</td><td>-</td><td>○</td><td>-</td><td>-</td><td>-</td><td>1.1万</td><td>-</td><td>-</td><td>62</td></tr>
+<tr><td>フォーリアB</td><td>鉄骨</td><td>B+</td><td>新</td><td>3/3F</td><td>○</td><td>-</td><td>○</td><td>-</td><td>○</td><td>○</td><td>○</td><td>-</td><td>-</td><td>-</td><td>-</td><td>83</td></tr>
+<tr><td>シャトーエミール</td><td>RC</td><td><span class="t tb">A</span></td><td>新</td><td>2/5F</td><td>○</td><td>○</td><td>○</td><td>-</td><td>○</td><td>-</td><td>-</td><td>-</td><td>-</td><td>○</td><td>-</td><td>82</td></tr>
+<tr><td>ヴィラシャンベール</td><td>ALC</td><td>B+</td><td>新</td><td>2/2F</td><td>○</td><td>○</td><td>○</td><td>-</td><td>○</td><td>-</td><td>-</td><td>-</td><td><span class="t tr">1.1万必須</span></td><td>-</td><td>-</td><td>76</td></tr>
+<tr><td>アダージオ湘南</td><td>木造</td><td>C+</td><td>新</td><td>2/2F</td><td>-</td><td>○</td><td>○</td><td>-</td><td>○</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>68</td></tr>
+<tr><td>シティレジデンスKAMIKO</td><td>RC</td><td><span class="t tb">A</span></td><td><span class="t tr">旧?</span></td><td>2/3F</td><td>○</td><td>-</td><td>○</td><td>-</td><td>○</td><td>-</td><td>-</td><td>-</td><td>-</td><td>○</td><td>-</td><td>75</td></tr>
+<tr><td>シャーメゾンボヌール</td><td>鉄骨</td><td>B+</td><td>新</td><td>2/3F</td><td>○</td><td>○</td><td>○</td><td>-</td><td>○</td><td>-</td><td>-</td><td><span class="t to">○</span></td><td>-</td><td>-</td><td>-</td><td>80</td></tr>
+<tr><td>テラスロンドI</td><td>軽量鉄骨</td><td>B</td><td>新</td><td>1/2F</td><td>-</td><td>-</td><td>○</td><td>○</td><td>○</td><td>○</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>70</td></tr>
+</tbody></table></div>
+</div>
+
+<!-- ===== 6. 周辺環境・住み心地 ===== -->
+<div class="sec" id="s-liv">
+<h2 style="font-size:1em;margin-bottom:10px">周辺環境・住み心地・ランニング適性</h2>
+
+<div class="liv-grid">
+
+<div class="liv-card">
+  <h3>辻堂駅エリア <span class="liv-score" style="background:var(--o)">総合 93</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: 辻堂2LDK / アダージオ湘南 / ル リアン湘南 / 浜竹貸家</div>
+  <div class="liv-items">
+    <b>買い物</b> <span class="stars">★★★★★</span><br>
+    テラスモール湘南（281店舗）が駅直結! サミット・成城石井・OKストア・業務スーパーと選択肢豊富。ドラッグストア20店超。日常の買い物は完璧。<br><br>
+    <b>飲食店</b> <span class="stars">★★★★★</span><br>
+    テラスモール内のレストラン街31店+周辺カフェ・個人店。夜23時まで営業する店も多い。<br><br>
+    <b>ランニング・散歩</b> <span class="stars">★★★★★</span><br>
+    辻堂海浜公園に距離表示付き周回コース（1.1km/700m/500m）。湘南海岸サイクリングロード（辻堂〜茅ヶ崎4.5km）は信号なし平坦舗装路で海風ラン最高! 毎週土曜パークランも開催。<br><br>
+    <b>ル リアン湘南の特記</b>: <span class="t tp">4階最上階から花火大会&江ノ島の眺望あり!</span> RC造で防音性も◎
+  </div>
+</div>
+
+<div class="liv-card">
+  <h3>本鵠沼・藤沢エリア <span class="liv-score" style="background:var(--b)">総合 82</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: アミスタ湘南 / ヴィラシャンベール / シャトーエミール</div>
+  <div class="liv-items">
+    <b>買い物</b> <span class="stars">★★★★</span><br>
+    YAMAKA本鵠沼店・スズキヤ鵠沼店・相鉄ローゼンなど地元密着型スーパーが点在。藤沢駅まで出れば大型商業施設も。<br><br>
+    <b>飲食店</b> <span class="stars">★★★★</span><br>
+    鵠沼橘エリアに串カツ・イタリアン・蕎麦など個人店が充実。サーフタウンらしいカフェも多い。<br><br>
+    <b>ランニング・散歩</b> <span class="stars">★★★★★</span><br>
+    鵠沼海岸まで徒歩15分（自転車5分）。湘南海岸サイクリングロード起点で、江ノ島を望む海沿いランが日常に。県立湘南海岸公園でビーチ散歩も◎
+  </div>
+</div>
+
+<div class="liv-card">
+  <h3>江ノ電柳小路（片瀬）<span class="liv-score" style="background:var(--g)">総合 72</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: KAPAL ENOSHIMA</div>
+  <div class="liv-items">
+    <b>買い物</b> <span class="stars">★★★</span><br>
+    ヤオコー藤沢片瀬店（徒歩5分、高評価）が頼り。大型商業施設は藤沢駅まで出る必要あり。<br><br>
+    <b>飲食店</b> <span class="stars">★★★</span><br>
+    住宅街のため駅前に集積は少ない。江ノ島方面に磯料理店やシーフードレストランが多数。<br><br>
+    <b>ランニング・散歩</b> <span class="stars">★★★★★</span><br>
+    <b>片瀬海岸が徒歩圏内!</b> 江ノ島を正面に望む絶景ランニング。湘南の海を最も身近に感じられる立地。ただし日常の買い物利便性とのトレードオフ。
+  </div>
+</div>
+
+<div class="liv-card">
+  <h3>大船駅エリア <span class="liv-score" style="background:var(--o)">総合 88</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: 大船 2LDK</div>
+  <div class="liv-items">
+    <b>買い物</b> <span class="stars">★★★★★</span><br>
+    「湘南のアメ横」大船仲通商店街が活気抜群! ライフ・西友・イトーヨーカドー・成城石井(駅直結)・業務スーパーと全価格帯カバー。GRAND SHIP(2021年開業)も便利。<br><br>
+    <b>飲食店</b> <span class="stars">★★★★★</span><br>
+    商店街の安い鮮魚・惣菜、居酒屋特集が組まれるほどの充実度。コスパ◎<br><br>
+    <b>ランニング・散歩</b> <span class="stars">★★★</span><br>
+    金井公園（700m/450m周回コース）はあるがバス利用。鎌倉トレイル・六国見山で山ランは可能。ただし海辺ランは鎌倉まで移動が必要。
+  </div>
+</div>
+
+<div class="liv-card">
+  <h3>柏の葉キャンパスエリア <span class="liv-score" style="background:var(--b)">総合 82</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: 蔵の杜 / フォーリアA / フォーリアB / シャーメゾンボヌール</div>
+  <div class="liv-items">
+    <b>買い物</b> <span class="stars">★★★★</span><br>
+    ららぽーと柏の葉内に東急ストア。おっ母さん食品館・アコレも。KASHIWANOHA T-SITEでおしゃれ買い物も。ただしニュータウンのため大型施設依存度が高い。<br><br>
+    <b>飲食店</b> <span class="stars">★★★★</span><br>
+    ららぽーと・T-SITE内にレストラン集積。「柏の葉かけだし横丁」もあり。個人の老舗は少なめ。<br><br>
+    <b>ランニング・散歩</b> <span class="stars">★★★★★</span><br>
+    <b>柏の葉公園の外周3kmコースが秀逸!</b> 平坦ノンストップでペース走に最適。parkrun会場。柏の葉アクアテラスの水辺コースも心地よい。こんぶくろ池自然博物公園・東大キャンパスの緑も。
+  </div>
+</div>
+
+<div class="liv-card">
+  <h3>荻窪駅エリア <span class="liv-score" style="background:var(--o)">総合 90</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: テラスロンドI</div>
+  <div class="liv-items">
+    <b>買い物</b> <span class="stars">★★★★★</span><br>
+    駅周辺にスーパー34店! 西友(タウンセブン内)・OKストア・まいばすけっと複数・ルミネ内成城石井。深夜営業多し。<br><br>
+    <b>飲食店</b> <span class="stars">★★★★★</span><br>
+    <b>ラーメン激戦区</b>（春木屋1949年創業〜）。カレーの名店も集結。老舗居酒屋、カフェも充実。食の街。<br><br>
+    <b>ランニング・散歩</b> <span class="stars">★★★★</span><br>
+    善福寺川緑地(片道5km)の川沿い遊歩道がメインコース。キロポスト完備で本格的。善福寺公園は井の頭より空いていて◎。西荻窪方面に走って銭湯+食事も定着。海はないが都市の緑ラン◎
+  </div>
+</div>
+
+<div class="liv-card">
+  <h3>武蔵新城駅エリア <span class="liv-score" style="background:var(--b)">総合 85</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: シティレジデンスKAMIKO</div>
+  <div class="liv-items">
+    <b>買い物</b> <span class="stars">★★★★★</span><br>
+    西友(24時間)・マルエツ(深夜1時)・まいばすけっと等10軒が徒歩圏内。価格帯の異なるスーパーが競合しコスパ◎。フラット地形で自転車移動も快適。<br><br>
+    <b>飲食店</b> <span class="stars">★★★★★</span><br>
+    <b>9つの商店街</b>に80店超! 中華・ラーメン・居酒屋・イタリアン・カフェが密集。地元密着で親しみやすい。<br><br>
+    <b>ランニング・散歩</b> <span class="stars">★★★★</span><br>
+    二ヶ領用水沿い遊歩道（桜並木）、せせらぎ遊歩道（3.5km、小川+鴨）が心地よい。等々力緑地(2.5km周回)は自転車圏内。多摩川「たまリバー50キロ」コースへも接続可能。
+  </div>
+</div>
+
+</div>
+</div>
+
+<!-- 飲食・カフェ Google評価セクション -->
+<h2 style="font-size:1em;margin:20px 0 10px">🍽️ 周辺グルメ・カフェ Google評価</h2>
+
+<div class="liv-grid">
+
+<div class="liv-card" style="border-left:4px solid #e74c3c">
+  <h3>荻窪駅 <span class="liv-score" style="background:#e74c3c">グルメ ★★★★★</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: テラスロンドI ｜ラーメンの聖地・東京屈指の飲食激戦区</div>
+  <div class="liv-items">
+    <b>名店（飲食）</b><br>
+    <span style="font-size:.8em">
+    🍜 春木屋（醤油ラーメン・昭和24年創業）<span class="t tb">★4.0</span> 口コミ1,000+<br>
+    🍜 味噌っ子ふっく（食べログ百名店）<span class="t tg">★4.2</span><br>
+    🍜 ねいろ屋（無添加・スタイリッシュ）<span class="t tg">★4.3</span><br>
+    🍜 ラーメン二葉（食べログTOP5000・煮干し）<span class="t tg">★4.1</span><br>
+    🍛 トマト（欧風カレー・36種スパイス・1982年創業）<span class="t tg">★4.1</span><br>
+    🇮🇹 ドラマティコ（イタリアン・地域密着20年超）<span class="t tb">★4.0</span>
+    </span><br><br>
+    <b>カフェ</b><br>
+    <span style="font-size:.8em">
+    ☕ 荻窪邪宗門（純喫茶の名店）<span class="t tg">★4.2</span><br>
+    ☕ CAFFE STRADA <span class="t tg">★4.3</span><br>
+    ☕ グロッケンシュピール（レトロ喫茶）<span class="t tg">★4.1</span>
+    </span><br><br>
+    <b>特徴</b>: ラーメン百名店が複数集結する全国屈指の激戦区。老舗カレー・純喫茶文化も健在
+  </div>
+</div>
+
+<div class="liv-card" style="border-left:4px solid #e74c3c">
+  <h3>武蔵新城駅 <span class="liv-score" style="background:var(--o)">グルメ ★★★★</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: シティレジデンスKAMIKO ｜知る人ぞ知るグルメ激戦区</div>
+  <div class="liv-items">
+    <b>名店（飲食）</b><br>
+    <span style="font-size:.8em">
+    🥩 炭火焼肉ホルモンさわいし（食べログ4点超・予約困難!）<span class="t tg">★4.5</span><br>
+    🍜 麺小屋てち（KANAGAWA百名店2回選出）<span class="t tg">★4.2</span><br>
+    🍜 煮干しらーめん田中にぼる（百名店2024選出）<span class="t tg">★4.3</span><br>
+    🍷 RACONDO（生ハムとワイン）<span class="t tg">★4.1</span>
+    </span><br><br>
+    <b>カフェ</b><br>
+    <span style="font-size:.8em">
+    ☕ TALUT DOT COFFEE（スペシャルティ・タルト）<span class="t tg">★4.4</span><br>
+    ☕ Cafe Sally <span class="t tg">★4.2</span>
+    </span><br><br>
+    <b>特徴</b>: 焼肉「さわいし」は神奈川トップ級。ラーメン百名店2軒。地元密着の実力派エリア
+  </div>
+</div>
+
+<div class="liv-card" style="border-left:4px solid #e74c3c">
+  <h3>辻堂駅 <span class="liv-score" style="background:var(--o)">グルメ ★★★★</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: 辻堂2LDK / アダージオ湘南 / ル リアン湘南 / 浜竹貸家</div>
+  <div class="liv-items">
+    <b>名店（飲食）</b><br>
+    <span style="font-size:.8em">
+    🐟 とびっちょ テラスモール（しらす料理）<span class="t tb">★4.0</span> 口コミ1,000+<br>
+    🍜 牡蠣工房Uguisu（牡蠣ラーメン）<span class="t tg">★4.2</span><br>
+    🍜 めんめん亭（老舗醤油ラーメン）<span class="t tb">★4.0</span><br>
+    🍝 SALVATORE CUOMO（イタリアン）<span class="t tb">★3.8</span><br>
+    🍖 いしがまやハンバーグ <span class="t tb">★3.9</span>
+    </span><br><br>
+    <b>カフェ</b><br>
+    <span style="font-size:.8em">
+    ☕ DEAN & DELUCA テラスモール <span class="t tg">★4.1</span><br>
+    ☕ J.S. PANCAKE CAFE <span class="t tb">★4.0</span><br>
+    ☕ SOHOLM CAFE <span class="t tb">★3.8</span>
+    </span><br><br>
+    <b>特徴</b>: テラスモール281店舗が核。チェーン＋湘南ローカル名店の混在。しらす料理が地域の特色
+  </div>
+</div>
+
+<div class="liv-card" style="border-left:4px solid #e74c3c">
+  <h3>茅ヶ崎（浜竹・美住町）<span class="liv-score" style="background:var(--o)">グルメ ★★★★</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: ル リアン湘南 / 浜竹貸家 ｜古民家・クラフト系の本物志向</div>
+  <div class="liv-items">
+    <b>名店（飲食）</b><br>
+    <span style="font-size:.8em">
+    🍺 MOKICHI FOODS GARDEN（熊澤酒造・地ビール）<span class="t tg">★4.3</span> 口コミ800+<br>
+    🏖️ サザンビーチカフェ（海景ダイニング）<span class="t tb">★3.9</span> 口コミ1,000+<br>
+    🍞 タイゾーベーカリー <span class="t tg">★4.4</span>
+    </span><br><br>
+    <b>カフェ</b><br>
+    <span style="font-size:.8em">
+    ☕ 黒糖茶房（日本初・沖縄純黒糖専門）<span class="t tg">★4.2</span><br>
+    ☕ すずの木カフェ（路地裏の隠れ家）<span class="t tg">★4.3</span><br>
+    ☕ mokichi cafe（築200年古民家）<span class="t tg">★4.4</span>
+    </span><br><br>
+    <b>特徴</b>: 古民家・クラフトビール・黒糖専門など全国唯一クラスの個性派店が点在。隠れ家感◎
+  </div>
+</div>
+
+<div class="liv-card" style="border-left:4px solid #e74c3c">
+  <h3>本鵠沼・鵠沼 <span class="liv-score" style="background:var(--o)">グルメ ★★★★</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: アミスタ湘南 / ヴィラシャンベール ｜おしゃれ個人店・湘南T-SITE</div>
+  <div class="liv-items">
+    <b>名店（飲食）</b><br>
+    <span style="font-size:.8em">
+    🍕 We eat Wheat（窯焼きピザ・パスタ）<span class="t tg">★4.2</span><br>
+    🥗 オーガニックグリル（有機食材）<span class="t tg">★4.3</span><br>
+    🇫🇷 Restaurant NORI et NOJI（フレンチ）<span class="t tg">★4.4</span><br>
+    🌮 TACOS SHOP PARA MEXICO <span class="t tb">★4.0</span>
+    </span><br><br>
+    <b>カフェ</b><br>
+    <span style="font-size:.8em">
+    ☕ 鈴鵠（世界大会入賞バリスタ!）<span class="t tg">★4.5</span><br>
+    ☕ スタバ 湘南蔦屋書店（T-SITE内）<span class="t tb">★4.0</span> 口コミ1,500+<br>
+    ☕ パン エス（カフェ併設ベーカリー）<span class="t tg">★4.3</span>
+    </span><br><br>
+    <b>特徴</b>: 世界レベルのバリスタカフェ「鈴鵠」！オーガニック・フレンチなど感度の高い個人店が集積
+  </div>
+</div>
+
+<div class="liv-card" style="border-left:4px solid #e74c3c">
+  <h3>片瀬・江ノ島 <span class="liv-score" style="background:var(--o)">グルメ ★★★★</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: KAPAL ENOSHIMA ｜海景ロケーション×海鮮グルメ</div>
+  <div class="liv-items">
+    <b>名店（飲食）</b><br>
+    <span style="font-size:.8em">
+    🍝 GARB江ノ島（窯焼きピザ・海景）<span class="t tb">★4.0</span> 口コミ1,000+<br>
+    🐚 江ノ島 貝作（海鮮・貝料理）<span class="t tb">★4.0</span><br>
+    🏖️ 江ノ島小屋（湘南スタイル）<span class="t tg">★4.1</span><br>
+    🇰🇷 湘南韓国料理GOKAN（海鮮韓国料理）<span class="t tg">★4.2</span>
+    </span><br><br>
+    <b>カフェ</b><br>
+    <span style="font-size:.8em">
+    ☕ 紅茶専門店ディンブラ（セイロンティー名店）<span class="t tg">★4.4</span><br>
+    ☕ suncafe paradise（トレーラーハウス）<span class="t tg">★4.3</span><br>
+    🥞 Eggs'n Things 片瀬江ノ島 <span class="t tb">★3.9</span> 口コミ900+
+    </span><br><br>
+    <b>特徴</b>: 海景ロケーションカフェが最大の魅力。紅茶専門「ディンブラ」は必訪。観光地ゆえの混雑注意
+  </div>
+</div>
+
+<div class="liv-card" style="border-left:4px solid #e74c3c">
+  <h3>藤沢駅 <span class="liv-score" style="background:var(--b)">グルメ ★★★½</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: シャトーエミール ｜湘南海鮮が得意・弥勒寺方面は飲食少なめ</div>
+  <div class="liv-items">
+    <b>名店（飲食）</b><br>
+    <span style="font-size:.8em">
+    🐟 魚つるHANARE（魚屋直営・鮮魚）<span class="t tg">★4.1</span><br>
+    🐟 ふじやす食堂（海鮮定食・昼のみ）<span class="t tb">★4.0</span><br>
+    🇮🇹 パレルモ（地下イタリアン・穴場）<span class="t tg">★4.3</span><br>
+    🍞 マダムルージュ（ベーカリーカフェ）<span class="t tg">★4.2</span>
+    </span><br><br>
+    <b>カフェ</b><br>
+    <span style="font-size:.8em">
+    ☕ カフェアロマ（自家焙煎・無農薬食材）<span class="t tg">★4.3</span><br>
+    ☕ 蔦屋書店内カフェ <span class="t tb">★4.0</span>
+    </span><br><br>
+    <b>注意</b>: シャトーエミールは弥勒寺エリア（住宅街）で飲食店少なめ。藤沢駅まで徒歩19分
+  </div>
+</div>
+
+<div class="liv-card" style="border-left:4px solid #e74c3c">
+  <h3>大船駅 <span class="liv-score" style="background:var(--b)">グルメ ★★★</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: 大船 2LDK ｜大衆食堂・チェーン主体</div>
+  <div class="liv-items">
+    <b>名店（飲食）</b><br>
+    <span style="font-size:.8em">
+    🍜 焼きあご塩らー麺たかはし <span class="t tg">★4.1</span><br>
+    🍣 大船軒（名物 鯵の押寿司）<span class="t tb">★4.0</span> 口コミ800+<br>
+    🍣 みわ久（寿司・海鮮丼）<span class="t tb">★3.8</span>
+    </span><br><br>
+    <b>カフェ</b><br>
+    <span style="font-size:.8em">
+    ☕ UNI COFFEE ROASTERY <span class="t tg">★4.3</span><br>
+    ☕ 和カフェ Tsumugi <span class="t tb">★4.0</span>
+    </span><br><br>
+    <b>特徴</b>: 大衆食堂・チェーン系が中心。「大船軒の鯵の押寿司」は全国的名物。新業態カフェが増加中
+  </div>
+</div>
+
+<div class="liv-card" style="border-left:4px solid #e74c3c">
+  <h3>柏の葉キャンパス駅 <span class="liv-score" style="background:var(--b)">グルメ ★★★</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: 蔵の杜 / フォーリアA・B / シャーメゾンボヌール ｜モール中心のニュータウン型</div>
+  <div class="liv-items">
+    <b>名店（飲食）</b><br>
+    <span style="font-size:.8em">
+    🛍️ ららぽーと柏の葉内のレストラン街（チェーン充実）<span class="t tb">★3.8〜4.0</span><br>
+    📚 T-SITE周辺のレストラン各種 <span class="t tb">★3.8〜4.1</span>
+    </span><br><br>
+    <b>カフェ</b><br>
+    <span style="font-size:.8em">
+    ☕ GREEN PARASOL（隠れ家カフェ）<span class="t tg">★4.2</span><br>
+    ☕ カフェカルディーノ+wine <span class="t tb">★3.9</span><br>
+    ☕ スタバ 柏の葉 <span class="t tb">★4.0</span>
+    </span><br><br>
+    <b>特徴</b>: ららぽーと+T-SITE核のモール型。個性的な個人名店はまだ少なく発展途上。ファミリーには便利
+  </div>
+</div>
+
+</div>
+
+<!-- 治安セクション -->
+<h2 style="font-size:1em;margin:20px 0 10px">駅前の治安</h2>
+
+<div class="liv-grid">
+
+<div class="liv-card" style="border-left:4px solid var(--g)">
+  <h3>辻堂駅 <span class="liv-score" style="background:var(--g)">治安 ★★★★★</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: 辻堂2LDK / アダージオ湘南 / ル リアン湘南 / 浜竹貸家</div>
+  <div class="liv-items">
+    <b>風俗・歓楽街</b>: なし。パチンコ1軒のみ<br>
+    <b>夜の雰囲気</b>: 南口に居酒屋はあるが穏やか。キャッチなし<br>
+    <b>女性の安全性</b>: <span class="t tg">非常に高い</span> 歓楽街がないことが住みやすさの代名詞<br>
+    <b>実績</b>: 「本当に住みやすい街大賞」関東1位（2021年）受賞<br>
+    <b>注意点</b>: 特になし。湘南エリアでトップクラスの安全性
+  </div>
+</div>
+
+<div class="liv-card" style="border-left:4px solid var(--g)">
+  <h3>柏の葉キャンパス駅 <span class="liv-score" style="background:var(--g)">治安 ★★★★★</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: 蔵の杜 / フォーリアA / フォーリアB / シャーメゾンボヌール</div>
+  <div class="liv-items">
+    <b>風俗・歓楽街</b>: <span class="t tg">一切なし</span>。パチンコもなし<br>
+    <b>夜の雰囲気</b>: 計画都市のため整然。ららぽーと・T-SITE中心で健全<br>
+    <b>女性の安全性</b>: <span class="t tg">非常に高い</span> 警察・機動隊施設が駅近くにあり安心<br>
+    <b>口コミ</b>: 「風俗やパチンコがないので安心して暮らせる」<br>
+    <b>注意点</b>: 駅から離れると街灯が少ないエリアが一部あり
+  </div>
+</div>
+
+<div class="liv-card" style="border-left:4px solid var(--b)">
+  <h3>荻窪駅 <span class="liv-score" style="background:var(--b)">治安 ★★★★</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: テラスロンドI</div>
+  <div class="liv-items">
+    <b>風俗・歓楽街</b>: <span class="t tg">なし</span>。パチンコも少数<br>
+    <b>夜の雰囲気</b>: 戦後からの居酒屋街が残り活気あり。ただし健全な飲食文化<br>
+    <b>女性の安全性</b>: <span class="t tg">高い</span> 駅前に交番あり、定期パトロール実施<br>
+    <b>データ</b>: 杉並区の犯罪発生率0.43%（都内5位の低さ）。荻窪はさらに低い0.37%<br>
+    <b>口コミ</b>: 「年配の方が多く落ち着いた雰囲気」「夜遅くても怖さを感じない」
+  </div>
+</div>
+
+<div class="liv-card" style="border-left:4px solid var(--b)">
+  <h3>武蔵新城駅 <span class="liv-score" style="background:var(--b)">治安 ★★★★</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: シティレジデンスKAMIKO</div>
+  <div class="liv-items">
+    <b>風俗・歓楽街</b>: なし。パチンコ数軒あり（南口ビル上層階）<br>
+    <b>夜の雰囲気</b>: 商店街のアーケードで夜道が暗くなりにくい。地元密着の穏やかさ<br>
+    <b>女性の安全性</b>: <span class="t tg">高い</span> 「武蔵小杉・溝の口より静かで安心」との声多数<br>
+    <b>データ</b>: 中原区の犯罪発生率は川崎区の半分以下<br>
+    <b>口コミ</b>: 「子どもが多く地域のつながりを感じる」「南武線沿線では治安が良い部類」
+  </div>
+</div>
+
+<div class="liv-card" style="border-left:4px solid var(--b)">
+  <h3>柳小路駅（片瀬）<span class="liv-score" style="background:var(--b)">治安 ★★★★</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: KAPAL ENOSHIMA</div>
+  <div class="liv-items">
+    <b>風俗・歓楽街</b>: <span class="t tg">なし</span>。パチンコもなし<br>
+    <b>夜の雰囲気</b>: 無人駅で商業施設ほぼなし。完全な住宅街で非常に静か<br>
+    <b>女性の安全性</b>: 治安自体は良好。ただし夜間は人通りが少ない<br>
+    <b>注意点</b>: <span class="t to">夏季は海水浴客で混雑</span>。観光シーズンのトラブルに注意
+  </div>
+</div>
+
+<div class="liv-card" style="border-left:4px solid var(--b)">
+  <h3>本鵠沼駅 <span class="liv-score" style="background:var(--b)">治安 ★★★★</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: アミスタ湘南 / ヴィラシャンベール</div>
+  <div class="liv-items">
+    <b>風俗・歓楽街</b>: <span class="t tg">なし</span>。パチンコもなし<br>
+    <b>夜の雰囲気</b>: 閑静な住宅街。藤沢警察署が近隣にあり<br>
+    <b>女性の安全性</b>: 治安自体は良好<br>
+    <b>注意点</b>: <span class="t to">夜道が暗い</span>。街灯が少ない路地が多いため帰宅ルートの確認を
+  </div>
+</div>
+
+<div class="liv-card" style="border-left:4px solid var(--o)">
+  <h3>大船駅 <span class="liv-score" style="background:var(--o)">治安 ★★★</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">対象: 大船 2LDK</div>
+  <div class="liv-items">
+    <b>風俗・歓楽街</b>: <span class="t to">東口に一部あり</span>。パチンコ複数軒<br>
+    <b>夜の雰囲気</b>: 東口は飲み屋街が集中し酔っ払いが多い。西口は落ち着いている<br>
+    <b>女性の安全性</b>: <span class="t to">東口の夜間は注意</span>。「東口の夜道は怖い」との女性口コミ複数<br>
+    <b>注意点</b>: 大船仲通り商店街にパチンコ店2店舗の建設計画あり（2024年末報道）<br>
+    <b>対策</b>: 物件は笠間（西側）なので、西口利用なら比較的安心
+  </div>
+</div>
+
+<div class="liv-card" style="border-left:4px solid var(--o)">
+  <h3>藤沢駅（参考）<span class="liv-score" style="background:var(--o)">治安 ★★★</span></h3>
+  <div style="font-size:.75em;color:var(--gr);margin-bottom:6px">参考: シャトーエミール（藤沢駅徒歩19分）</div>
+  <div class="liv-items">
+    <b>風俗・歓楽街</b>: <span class="t tr">南口にあり</span>。ビル上層階に風俗店が入居との口コミ<br>
+    <b>夜の雰囲気</b>: 南口は居酒屋のキャッチが出る。北口は比較的健全<br>
+    <b>女性の安全性</b>: <span class="t to">南口の夜間は注意が必要</span><br>
+    <b>データ</b>: 2024年に県警と市が飲食・風俗店を抜き打ち査察、19件の違反確認<br>
+    <b>補足</b>: シャトーエミールは駅から徒歩19分のため駅前の影響は限定的
+  </div>
+</div>
+
+</div>
+
+</div>
+
+<!-- ===== 7. ランキング ===== -->
+<div class="sec" id="s-rank">
+<div class="rg">
+
+<div class="rb2"><div class="rt">総合スコア TOP5</div><ul class="rl">
+  <li><span class="rp p1">1</span>蔵の杜<span><b>87点</b> 新築+コスパ</span></li>
+  <li><span class="rp p2">2</span>テラスロンドI<span><b>86点</b> 通勤+環境</span></li>
+  <li><span class="rp p3">3</span>アミスタ湘南<span><b>83点</b> RC+安い</span></li>
+  <li><span class="rp pn">4</span>大船 2LDK<span>82点 最安月額</span></li>
+  <li><span class="rp pn">5</span>シティレジデンスKAMIKO<span>81点 間取り◎</span></li>
+</ul></div>
+
+<div class="rb2"><div class="rt">間取り総合 TOP5</div><ul class="rl">
+  <li><span class="rp p1">1</span>浜竹貸家<span><b>92点</b> 3LDK 87㎡</span></li>
+  <li><span class="rp p2">2</span>シティレジデンスKAMIKO<span><b>88点</b> LDK15.3畳!</span></li>
+  <li><span class="rp p3">3</span>蔵の杜<span><b>82点</b> 67㎡新築</span></li>
+  <li><span class="rp pn">4</span>シャトーエミール<span>80点 2SLDK</span></li>
+  <li><span class="rp pn">4</span>アダージオ湘南<span>80点 64㎡</span></li>
+</ul></div>
+
+<div class="rb2"><div class="rt">月額の安さ TOP5</div><ul class="rl">
+  <li><span class="rp p1">1</span>大船 2LDK<span><b>11.9万</b></span></li>
+  <li><span class="rp p2">2</span>ル リアン湘南<span><b>12.05万</b></span></li>
+  <li><span class="rp p3">3</span>アミスタ湘南 / 浜竹貸家<span><b>12.5万</b></span></li>
+  <li><span class="rp pn">5</span>KAPAL ENOSHIMA<span>12.8万</span></li>
+</ul></div>
+
+<div class="rb2"><div class="rt">通勤(両国含む)TOP5</div><ul class="rl">
+  <li><span class="rp p1">1</span>テラスロンドI（荻窪）<span><b>96点</b> 東京25分/両国30分</span></li>
+  <li><span class="rp p2">2</span>シティレジデンスKAMIKO<span><b>78点</b> 東京40分/両国55分</span></li>
+  <li><span class="rp p3">3</span>大船 2LDK<span><b>70点</b> 東京45分/両国65分</span></li>
+  <li><span class="rp pn">4</span>辻堂 2LDK<span>62点 東京50分</span></li>
+  <li><span class="rp pn">4</span>フォーリアA/B<span>62点 両国55分!</span></li>
+</ul></div>
+
+<div class="rb2"><div class="rt">ランニング・散歩 TOP5</div><ul class="rl">
+  <li><span class="rp p1">1</span>KAPAL ENOSHIMA<span><b>95点</b> 片瀬海岸+江ノ島</span></li>
+  <li><span class="rp p2">2</span>辻堂 2LDK / アダージオ湘南<span><b>90-92点</b> 海浜公園+海沿い</span></li>
+  <li><span class="rp p3">3</span>アミスタ / ル リアン / ヴィラシャンベール<span><b>88点</b> 鵠沼海岸</span></li>
+  <li><span class="rp pn">4</span>柏の葉4物件<span>85点 柏の葉公園3km</span></li>
+  <li><span class="rp pn">5</span>テラスロンドI<span>80点 善福寺川5km</span></li>
+</ul></div>
+
+<div class="rb2"><div class="rt">周辺環境・住み心地 TOP5</div><ul class="rl">
+  <li><span class="rp p1">1</span>辻堂 2LDK / アダージオ湘南<span><b>92-95点</b> テラスモール!</span></li>
+  <li><span class="rp p2">2</span>テラスロンドI（荻窪）<span><b>92点</b> スーパー34店</span></li>
+  <li><span class="rp p3">3</span>大船 2LDK<span><b>90点</b> 湘南のアメ横</span></li>
+  <li><span class="rp pn">4</span>シティレジデンスKAMIKO<span>88点 9商店街</span></li>
+  <li><span class="rp pn">5</span>蔵の杜 / 柏エリア<span>80点 ららぽーと</span></li>
+</ul></div>
+
+<div class="rb2"><div class="rt">2年間総コスト TOP5</div><ul class="rl">
+  <li><span class="rp p1">1</span>大船 2LDK<span><b>約311万</b></span></li>
+  <li><span class="rp p2">2</span>ル リアン湘南<span><b>約315万</b></span></li>
+  <li><span class="rp p3">3</span>アミスタ湘南<span><b>約328万</b></span></li>
+  <li><span class="rp pn">4</span>浜竹貸家<span>約338万</span></li>
+  <li><span class="rp pn">5</span>KAPAL ENOSHIMA<span>約361万</span></li>
+</ul></div>
+
+<div class="rb2"><div class="rt">防音性 ランキング</div><ul class="rl">
+  <li><span class="rp p1">A</span>ル リアン湘南 / アミスタ湘南<span><b>RC造</b></span></li>
+  <li><span class="rp p1">A</span>シャトーエミール / シティレジデンスKAMIKO<span><b>RC造</b></span></li>
+  <li><span class="rp p2">B+</span>蔵の杜 / フォーリアB / ヴィラシャンベール<span>鉄骨/ALC</span></li>
+  <li><span class="rp p3">B</span>大船 / KAPAL / フォーリアA / テラスロンドI<span>軽量鉄骨</span></li>
+  <li><span class="rp pn">C</span>浜竹貸家 / 辻堂2LDK / アダージオ湘南<span>木造</span></li>
+</ul></div>
+
+</div>
+</div>
+
+<!-- ===== 8. カード(TOP6) ===== -->
+<div class="sec" id="s-cards">
+<div class="cards">
+
+<div class="card rs">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start"><span class="cn">蔵の杜</span><span class="cb" style="background:var(--o)">総合1位 87点</span></div>
+  <div class="ca">千葉県柏市若柴 | TX柏の葉キャンパス駅 徒歩15分</div>
+  <div><span class="cp">13.85万円</span><span class="cpn"> /月</span></div>
+  <dl class="cg"><dt>敷/礼</dt><dd>1ヶ月/0!</dd><dt>初期費用</dt><dd>約17.5万(最安級)</dd><dt>間取り</dt><dd>2LDK 66.73㎡</dd><dt>築年</dt><dd>新築(2026年3月)</dd><dt>構造</dt><dd>鉄骨(防音B+)</dd><dt>通勤</dt><dd>東京50分/両国55分</dd><dt>ラン</dt><dd>柏の葉公園3km周回</dd><dt>㎡単価</dt><dd>2,076円</dd></dl>
+  <div class="cs2"><div class="cs2t">評価</div><div class="ms">
+    <div class="m"><div class="ml">コスパ</div><div class="mb"><div class="mf" style="width:90%;background:var(--g)"></div></div><div class="mv">90</div></div>
+    <div class="m"><div class="ml">通勤</div><div class="mb"><div class="mf" style="width:61%;background:var(--o)"></div></div><div class="mv">61</div></div>
+    <div class="m"><div class="ml">間取り</div><div class="mb"><div class="mf" style="width:82%;background:var(--b)"></div></div><div class="mv">82</div></div>
+    <div class="m"><div class="ml">環境</div><div class="mb"><div class="mf" style="width:80%;background:var(--b)"></div></div><div class="mv">80</div></div>
+    <div class="m"><div class="ml">ラン</div><div class="mb"><div class="mf" style="width:85%;background:var(--g)"></div></div><div class="mv">85</div></div>
+  </div></div>
+  <div class="ct"><span class="t tg">新築</span><span class="t tg">礼金0</span><span class="t tg">ネット無料</span><span class="t tgr">宅配BOX</span><span class="t tgr">駐車場7,920円</span></div>
+  <a class="cl" href="https://suumo.jp/chintai/__JJ_FR301FD001_arz1030z2bcz1100497835582z2bsz1040.html" target="_blank">SUUMO</a>
+</div>
+
+<div class="card rs">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start"><span class="cn">テラスロンドI</span><span class="cb" style="background:var(--o)">総合2位 86点</span></div>
+  <div class="ca">東京都杉並区荻窪2 | JR/丸ノ内線 荻窪駅 徒歩14分</div>
+  <div><span class="cp">15.5万円</span><span class="cpn"> /月 | 通勤最強!</span></div>
+  <dl class="cg"><dt>敷/礼</dt><dd>0/1ヶ月</dd><dt>初期費用</dt><dd>約18.5万</dd><dt>間取り</dt><dd>2LDK 53.9㎡</dd><dt>築年</dt><dd>9年(2018年)</dd><dt>通勤</dt><dd>東京25分/両国30分!</dd><dt>周辺</dt><dd>スーパー34店,ラーメン激戦区</dd><dt>ラン</dt><dd>善福寺川緑地5km</dd><dt>注意</dt><dd>1階/面積狭め</dd></dl>
+  <div class="ct"><span class="t tg">丸ノ内線直通</span><span class="t tg">敷金0</span><span class="t tgr">WIC</span><span class="t to">1階</span><span class="t to">54㎡</span></div>
+  <a class="cl" href="https://suumo.jp/chintai/__JJ_FR301FD001_arz1030z2bcz1100486358306z2bsz1040.html" target="_blank">SUUMO</a>
+</div>
+
+<div class="card ra">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start"><span class="cn">アミスタ湘南 301</span><span class="cb" style="background:var(--b)">総合3位 83点</span></div>
+  <div class="ca">神奈川県藤沢市本鵠沼5 | 本鵠沼駅 徒歩8分</div>
+  <div><span class="cp">12.5万円</span><span class="cpn"> /月 | RC造+湘南ライフ</span></div>
+  <dl class="cg"><dt>敷/礼</dt><dd>1ヶ月/0!</dd><dt>間取り</dt><dd>2LDK 50㎡(洋6+4+LDK11.9)</dd><dt>築年</dt><dd>4年 RC(防音A)</dd><dt>通勤</dt><dd>東京55分/両国80分</dd><dt>ラン</dt><dd>鵠沼海岸まで15分!</dd><dt>2年総額</dt><dd>約328万(3位)</dd></dl>
+  <div class="ct"><span class="t tb">RC造</span><span class="t tg">礼金0</span><span class="t tg">最上階</span><span class="t tgr">駅近8分</span><span class="t to">50㎡(狭め)</span></div>
+  <a class="cl" href="https://suumo.jp/chintai/__JJ_FR301FD001_arz1030z2bcz1100490197355z2bsz1040.html" target="_blank">SUUMO</a>
+</div>
+
+<div class="card ra">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start"><span class="cn">大船 2LDK</span><span class="cb" style="background:var(--b)">総合4位 82点</span></div>
+  <div class="ca">神奈川県横浜市栄区笠間5 | JR大船駅 徒歩18分</div>
+  <div><span class="cp">11.9万円</span><span class="cpn"> /月 | 月額&2年総額 最安!</span></div>
+  <dl class="cg"><dt>敷/礼</dt><dd>0/1ヶ月</dd><dt>間取り</dt><dd>2LDK 59.5㎡ WIC</dd><dt>築年</dt><dd>10年 軽量鉄骨</dd><dt>周辺</dt><dd>大船仲通商店街(湘南のアメ横)</dd><dt>2年総額</dt><dd>約311万(最安!)</dd><dt>注意</dt><dd>駅徒歩18分/海遠い</dd></dl>
+  <div class="ct"><span class="t to">ペット可</span><span class="t tg">敷金0</span><span class="t tg">ネット無料</span><span class="t tg">2年最安</span><span class="t to">駅遠め</span></div>
+  <a class="cl" href="https://suumo.jp/chintai/__JJ_FR301FD001_arz1030z2bcz1100496440391z2bsz1040.html" target="_blank">SUUMO</a>
+</div>
+
+<div class="card ra">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start"><span class="cn">シティレジデンスKAMIKO</span><span class="cb" style="background:var(--b)">総合5位 81点</span></div>
+  <div class="ca">川崎市中原区上小田中 | JR武蔵新城駅 徒歩13分</div>
+  <div><span class="cp">14.9万円</span><span class="cpn"> /月 | LDK15.3畳!</span></div>
+  <dl class="cg"><dt>敷/礼</dt><dd>1ヶ月/1ヶ月</dd><dt>間取り</dt><dd>2LDK 66㎡ (LDK15.3畳!)</dd><dt>築年</dt><dd>34年→2021年リノベ RC</dd><dt>通勤</dt><dd>東京40分/両国55分</dd><dt>周辺</dt><dd>9商店街80店+西友24h</dd><dt>ラン</dt><dd>二ヶ領用水+等々力緑地</dd></dl>
+  <div class="ct"><span class="t tb">RC造</span><span class="t tg">リノベ済</span><span class="t tg">LDK15.3畳!</span><span class="t tr">旧耐震?</span><span class="t tr">敷引1ヶ月</span></div>
+  <a class="cl" href="https://suumo.jp/chintai/__JJ_FR301FD001_arz1030z2bcz1100490489391z2bsz1040.html" target="_blank">SUUMO</a>
+</div>
+
+<div class="card rb">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start"><span class="cn">辻堂 2LDK</span><span class="cb" style="background:var(--g)">周辺環境No.1</span></div>
+  <div class="ca">神奈川県藤沢市辻堂元町2 | JR辻堂駅 徒歩10分</div>
+  <div><span class="cp">14万円</span><span class="cpn"> /月 | テラスモール至近!</span></div>
+  <dl class="cg"><dt>敷/礼</dt><dd>1ヶ月/1ヶ月</dd><dt>間取り</dt><dd>2LDK 57㎡ (LDK9畳注意)</dd><dt>築年</dt><dd>6年 木造</dd><dt>周辺</dt><dd>テラスモール湘南281店!</dd><dt>ラン</dt><dd>辻堂海浜公園+海沿い4.5km</dd><dt>即入居</dt><dd>可!</dd></dl>
+  <div class="ct"><span class="t tg">即入居</span><span class="t tg">テラスモール</span><span class="t tg">海沿いラン</span><span class="t tr">LDK9畳</span><span class="t tr">木造</span></div>
+  <a class="cl" href="https://suumo.jp/chintai/__JJ_FR301FD001_arz1030z2bcz1100490220590z2bsz1040.html" target="_blank">SUUMO</a>
+</div>
+
+</div>
+</div>
+
+<!-- ===== 9. 内見チェック ===== -->
+<div class="sec" id="s-chk">
+<div class="chk">
+  <h3>内見時チェックリスト</h3>
+  <h4>室内</h4>
+  <div class="chg">
+    <label class="chi"><input type="checkbox"> 日当たり（南向きか、時間帯別の明るさ）</label>
+    <label class="chi"><input type="checkbox"> 壁をノックして防音性を確認</label>
+    <label class="chi"><input type="checkbox"> 水圧チェック（蛇口を全開に）</label>
+    <label class="chi"><input type="checkbox"> 携帯電波の受信状況</label>
+    <label class="chi"><input type="checkbox"> コンセント位置と数</label>
+    <label class="chi"><input type="checkbox"> 収納の量と使いやすさ（奥行き）</label>
+    <label class="chi"><input type="checkbox"> エアコンの型番と年式</label>
+    <label class="chi"><input type="checkbox"> 窓の開閉・サッシの気密性</label>
+    <label class="chi"><input type="checkbox"> カビ・結露の痕跡（窓枠・浴室）</label>
+    <label class="chi"><input type="checkbox"> 洗濯機置場サイズ（ドラム式OK?）</label>
+    <label class="chi"><input type="checkbox"> LDKに家具を置いた時の導線イメージ</label>
+    <label class="chi"><input type="checkbox"> 天井高・圧迫感の確認</label>
+  </div>
+  <h4>建物・共用部</h4>
+  <div class="chg">
+    <label class="chi"><input type="checkbox"> ゴミ置場（24h出せるか・清潔さ）</label>
+    <label class="chi"><input type="checkbox"> 駐輪場の空きと屋根</label>
+    <label class="chi"><input type="checkbox"> 共用廊下・階段の清掃状態</label>
+    <label class="chi"><input type="checkbox"> ポスト周りのチラシ散乱</label>
+    <label class="chi"><input type="checkbox"> 他住人の雰囲気</label>
+  </div>
+  <h4>周辺環境（実際に歩く）</h4>
+  <div class="chg">
+    <label class="chi"><input type="checkbox"> 駅まで実際に歩く（坂・信号待ち）</label>
+    <label class="chi"><input type="checkbox"> スーパー・コンビニの距離と営業時間</label>
+    <label class="chi"><input type="checkbox"> 夜の雰囲気（街灯・人通り）</label>
+    <label class="chi"><input type="checkbox"> 周辺騒音（幹線道路・線路）</label>
+    <label class="chi"><input type="checkbox"> ハザードマップ確認</label>
+    <label class="chi"><input type="checkbox"> ランニングコースの下見</label>
+  </div>
+  <h4>契約前の確認</h4>
+  <div class="chg">
+    <label class="chi"><input type="checkbox"> 更新料の有無と金額</label>
+    <label class="chi"><input type="checkbox"> 退去時の原状回復範囲</label>
+    <label class="chi"><input type="checkbox"> 保証会社の費用（初回・月額）</label>
+    <label class="chi"><input type="checkbox"> 定期借家の場合: 再契約可否</label>
+    <label class="chi"><input type="checkbox"> 特約事項（クリーニング費等）</label>
+    <label class="chi"><input type="checkbox"> ペット飼育時の追加費用</label>
+    <label class="chi"><input type="checkbox"> 旧耐震物件の耐震補強の有無</label>
+  </div>
+</div>
+</div>
+
+<script>
+function sw(id,b){document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));document.getElementById('s-'+id).classList.add('on');b.classList.add('on')}
+function filterCards(a,b){b.parentElement.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.querySelectorAll('#card-list .card').forEach(c=>{c.style.display=(a==='all'||c.dataset.area===a)?'':'none'})}
+</script>
+
+</body>
+</html>
